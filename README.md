@@ -1,4 +1,4 @@
-ballsim2015
+Ball Simulator 2015
 ===========
 
-Ball Simulator 2015 - Phaser.js Edition
+Please check the gh-pages branch for the actual code
