@@ -1,0 +1,17 @@
+body {
+	font-family: helvetica;
+	overflow: scroll;
+	background-image: -webkit-linear-gradient(92deg,#f35626,#feab3a);
+	background-image: -moz-linear-gradient(92deg,#f35626,#feab3a);
+	background-image: -ie-linear-gradient(92deg,#f35626,#feab3a);
+	background-image: -o-linear-gradient(92deg,#f35626,#feab3a);
+	background-image: linear-gradient(92deg,#f35626,#feab3a);
+}
+canvas {
+	margin: 0 auto;
+	width: 600px;
+	height: 600px;
+	-moz-border-radius: 300px;
+	-webkit-border-radius: 300px;
+	border-radius: 300px;
+}

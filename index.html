@@ -1,33 +1,13 @@
 <html>
 	<head>
 		<title>Ball Sim 2015</title>
-		<style type='text/css'>
-			@-webkit-keyframes hue {
-			  from {
-			    -webkit-filter: hue-rotate(0deg);
-			  }
-
-			  to {
-			    -webkit-filter: hue-rotate(-360deg);
-			  }
-			}
-
-			body {
-				font-family: helvetica;
-				overflow: scroll;
-				background-image: -webkit-linear-gradient(92deg,#f35626,#feab3a);
-				-webkit-animation: hue 10s infinite linear;
-			}
-			canvas {
-				margin: 0 auto;
-			}
-		</style>
+		<link rel="stylesheet" href="style.css">
 	</head>
 	<body>
 		<script src='js/phaser.js'></script>
 		<script src='js/jquery.js'></script>
 		<script>
-			var game = new Phaser.Game(700, 700, Phaser.AUTO, 'ballsim', { preload: preload, create: create, update: update, render: render });
+			var game = new Phaser.Game(600, 600, Phaser.AUTO, 'ballsim', { preload: preload, create: create, update: update, render: render });
 
 			function preload() {
 			}
