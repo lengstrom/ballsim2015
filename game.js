@@ -20,24 +20,27 @@ Ball = function(x, y, radius, color, vx, vy, target) {
 };
 
 Ball.prototype.update = function(delta, canvas, array) {
-	this.x += this.vx;
-	this.y += this.vy;
+	if (this.alive) {
+		this.x += this.vx;
+		this.y += this.vy;
 
-	if (this.x < (0 - this.radius) || this.x > (winwidth + this.radius) || this.y < (0 - this.radius) || this.y > (winheight + this.radius)) {
-		this.alive = false;
-		var index = array.indexOf(this);
-		array.splice(index, 1);
-	}
+		if (this.x < (0 - this.radius) || this.x > (winwidth + this.radius) || this.y < (0 - this.radius) || this.y > (winheight + this.radius)) {
+			this.alive = false;
+			var index = array.indexOf(this);
+			array.splice(index, 1);
+		}
 
-	if (this.alive && this.radius < this.target.radius && collision(this,this.target)) {
-		this.alive = false;
-		this.target.radius += this.radius / 2;
-		this.target.color = this.color;
-		score += Math.round(this.radius * 5);
-		var index = this.target.enemies.indexOf(this);
-		this.target.enemies.splice(index, 1);
-	} else if (this.alive && this.radius >= this.target.radius && collision(this,this.target)) {
-		gameOver = true;
+		if (this.alive && this.radius < this.target.radius && collision(this,this.target)) {
+			this.alive = false;
+			this.target.radius += this.radius / 2;
+			this.target.color = this.color;
+			score += Math.round(this.radius * 5);
+			var index = this.target.enemies.indexOf(this);
+			this.target.enemies.splice(index, 1);
+		} else if (this.alive && this.radius >= this.target.radius && collision(this,this.target)) {
+			this.target.alive = false;
+			gameOver = true;
+		}
 	}
 }
 
@@ -57,49 +60,55 @@ Player = function(x, y, enemies) {
 	this.color = "white";
 	this.speed = 250;
 	this.enemies = enemies;
+	this.alive = true;
 };
 
 Player.prototype.update = function(delta, canvas) {
-	if (65 in keysDown) { //left
-		if (this.x > 0) {
-			this.x -= this.speed * delta;
+	if (this.alive) {
+		if (65 in keysDown) { //left
+			if (this.x > 0) {
+				this.x -= this.speed * delta;
+			}
 		}
-	}
-	if (87 in keysDown) { //up
-		if (this.y > 0) {
-			this.y -= this.speed * delta;
+		if (87 in keysDown) { //up
+			if (this.y > 0) {
+				this.y -= this.speed * delta;
+			}
 		}
-	}
-	if (68 in keysDown) { //right
-		if (this.x < canvas.width - this.radius) {
-			this.x += this.speed * delta;
+		if (68 in keysDown) { //right
+			if (this.x < canvas.width - this.radius) {
+				this.x += this.speed * delta;
+			}
 		}
-	}
-	if (83 in keysDown) { //down
-		if (this.y < canvas.height - this.radius) {
-			this.y += this.speed * delta;
+		if (83 in keysDown) { //down
+			if (this.y < canvas.height - this.radius) {
+				this.y += this.speed * delta;
+			}
 		}
-	}
 
-	for (var i = 0; i < this.enemies.length; i++) {
-		if (this.enemies[i].alive && this.enemies[i].radius < this.radius && collision(this,this.enemies[i])) {
-			this.enemies[i].alive = false;
-			this.radius += this.enemies[i].radius / 2;
-			this.color = this.enemies[i].color;
-			score += Math.round(this.enemies[i].radius * 5);
-			var index = this.enemies.indexOf(this.enemies[i]);
-			this.enemies.splice(index, 1);
-		} else if (this.enemies[i].alive && this.enemies[i].radius >= this.radius && collision(this,this.enemies[i])) {
-			gameOver = true;
+		for (var i = 0; i < this.enemies.length; i++) {
+			if (this.enemies[i].alive && this.enemies[i].radius < this.radius && collision(this,this.enemies[i])) {
+				this.enemies[i].alive = false;
+				this.radius += this.enemies[i].radius / 2;
+				this.color = this.enemies[i].color;
+				score += Math.round(this.enemies[i].radius * 5);
+				var index = this.enemies.indexOf(this.enemies[i]);
+				this.enemies.splice(index, 1);
+			} else if (this.enemies[i].alive && this.enemies[i].radius >= this.radius && collision(this,this.enemies[i])) {
+				this.alive = false;
+				gameOver = true;
+			}
 		}
 	}
 }
 
 Player.prototype.draw = function(ctx) {
-	ctx.beginPath();
-	ctx.arc(this.x, this.y, this.radius, 0, 2 * Math.PI, false);
-	ctx.fillStyle = this.color;
-	ctx.fill();
+	if (this.alive) {
+		ctx.beginPath();
+		ctx.arc(this.x, this.y, this.radius, 0, 2 * Math.PI, false);
+		ctx.fillStyle = this.color;
+		ctx.fill();
+	}
 }
 
 function distance (x1,y1,x2,y2) {
@@ -173,6 +182,7 @@ function initGame() {
 	enemycap = enemycap * screenscale;
 	canvas.width = winwidth;
 	canvas.height = winheight;
+	score = 0;
 
 	var enemies = [];
 	var colors = ["red", "blue", "gray", "purple", "cyan", "green", "pink"];
@@ -182,28 +192,28 @@ function initGame() {
 	var makeEnemy = function(side) {
 		if (side === 0) {
 			var randY = Math.round(Math.random() * winheight);
-			var ranRadius = Math.random() * 2 * player.radius;
+			var ranRadius = Math.round(Math.random() * 2 * player.radius);
 			var color = colors[Math.round(Math.random() * colors.length)];
 			var speed = Math.round(Math.random() * 5) + 1;
 			var enemy = new Ball(0, randY, ranRadius, color, speed, 0, player);
 			enemies.push(enemy);
 		} else if (side === 1) {
 			var randX = Math.round(Math.random() * winwidth);
-			var ranRadius = Math.random() * 2 * player.radius;
+			var ranRadius = Math.round(Math.random() * 2 * player.radius);
 			var color = colors[Math.round(Math.random() * colors.length)];
 			var speed = Math.round(Math.random() * 5) + 1;
 			var enemy = new Ball(randX, 0, ranRadius, color, 0, speed, player);
 			enemies.push(enemy);
 		} else if (side === 2) {
 			var randY = Math.round(Math.random() * winheight);
-			var ranRadius = Math.random() * 2 * player.radius;
+			var ranRadius = Math.round(Math.random() * 2 * player.radius);
 			var color = colors[Math.round(Math.random() * colors.length)];
 			var speed = Math.round(Math.random() * 5) + 1;
 			var enemy = new Ball(winwidth, randY, ranRadius, color, speed * -1, 0, player);
 			enemies.push(enemy);
 		} else if (side === 3) {
 			var randX = Math.round(Math.random() * winwidth);
-			var ranRadius = Math.random() * 2 * player.radius;
+			var ranRadius = Math.round(Math.random() * 2 * player.radius);
 			var color = colors[Math.round(Math.random() * colors.length)];
 			var speed = Math.round(Math.random() * 5) + 1;
 			var enemy = new Ball(randX, 0, ranRadius, color, 0, speed * -1, player);
@@ -273,7 +283,7 @@ function initGame() {
 		ctx.font = "75pt Impact";
 		ctx.fillStyle = "white";
 		ctx.textAlign = "center";
-		ctx.fillText("Your score was " + score, winwidth / 2, winheight / 2 + 50);
+		ctx.fillText("Your score was " + score, winwidth / 2, winheight / 2 + 100);
 
 		ctx.fillStyle = "green";
 		ctx.fillRect(canvas.width / 2 - 100, canvas.height - 150, 200, 75);
@@ -290,8 +300,14 @@ function initGame() {
 		var y = event.pageY - cTop;
 
 		if (y > canvas.height - 150 && y < canvas.height - 150 + 75 && x > canvas.width / 2 - 100 && x < canvas.width / 2 - 100 + 200 && gameOver) {
-			ctx.clearRect(0, 0, canvas.width, canvas.height);
 			gameOver = false;
+			score = 0;
+			enemies.forEach(function(ball){
+				ball.alive = false;
+			});
+			enemies = [];
+			player.radius = 10;
+			ctx.clearRect(0, 0, canvas.width, canvas.height);
 			initGame();
 		}
 	}, false);
