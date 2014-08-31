@@ -1,3 +1,11 @@
+var music = new Audio('assets/sounds/background.wav'); 
+music.volume = 0.5;
+music.addEventListener('ended', function() {
+    this.currentTime = 0;
+    this.play();
+}, false);
+music.play();
+
 var currentcanvas;
 var keysDown = {};
 var gameOver = false;
@@ -37,9 +45,13 @@ Ball.prototype.update = function(delta, canvas, array) {
 			score += Math.round(this.radius * 5);
 			var index = this.target.enemies.indexOf(this);
 			this.target.enemies.splice(index, 1);
+			var sound = new Audio("assets/sounds/kill.wav");
+			sound.play();
 		} else if (this.alive && this.radius >= this.target.radius && collision(this,this.target)) {
 			this.target.alive = false;
 			gameOver = true;
+			var sound = new Audio("assets/sounds/death.wav");
+			sound.play();
 		}
 	}
 }
@@ -94,9 +106,13 @@ Player.prototype.update = function(delta, canvas) {
 				score += Math.round(this.enemies[i].radius * 5);
 				var index = this.enemies.indexOf(this.enemies[i]);
 				this.enemies.splice(index, 1);
+				var sound = new Audio("assets/sounds/kill.wav");
+				sound.play();
 			} else if (this.enemies[i].alive && this.enemies[i].radius >= this.radius && collision(this,this.enemies[i])) {
 				this.alive = false;
 				gameOver = true;
+				var sound = new Audio("assets/sounds/death.wav");
+				sound.play();
 			}
 		}
 	}
@@ -177,6 +193,8 @@ function initGame() {
 	var canvas = document.getElementById("game");
 	var ctx = canvas.getContext('2d');
 	currentcanvas = "game";
+	winwidth = document.documentElement.clientWidth;
+	winheight = document.documentElement.clientHeight;
 	var clientarea = winwidth * winheight;
 	screenscale = clientarea / screenarea;
 	enemycap = enemycap * screenscale;
@@ -300,7 +318,7 @@ function initGame() {
 		var y = event.pageY - cTop;
 
 		if (y > canvas.height - 150 && y < canvas.height - 150 + 75 && x > canvas.width / 2 - 100 && x < canvas.width / 2 - 100 + 200 && gameOver) {
-			gameOver = false;
+			/*gameOver = false;
 			score = 0;
 			enemies.forEach(function(ball){
 				ball.alive = false;
@@ -308,7 +326,8 @@ function initGame() {
 			enemies = [];
 			player.radius = 10;
 			ctx.clearRect(0, 0, canvas.width, canvas.height);
-			initGame();
+			initGame();*/
+			location.reload();
 		}
 	}, false);
 

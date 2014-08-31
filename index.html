@@ -1,11 +1,30 @@
 <html>
 	<head>
 		<title>Ball Sim 2015</title>
-		<!--link href="style.css" rel="stylesheet"-->
+		<link rel="shortcut icon" href="assets/favicons/favicon.ico">
+		<link rel="icon" sizes="16x16 32x32 64x64" href="assets/favicons/favicon.ico">
+		<link rel="icon" type="image/png" sizes="196x196" href="assets/favicons/favicon-196.png">
+		<link rel="icon" type="image/png" sizes="160x160" href="assets/favicons/favicon-160.png">
+		<link rel="icon" type="image/png" sizes="96x96" href="assets/favicons/favicon-96.png">
+		<link rel="icon" type="image/png" sizes="64x64" href="assets/favicons/favicon-64.png">
+		<link rel="icon" type="image/png" sizes="32x32" href="assets/favicons/favicon-32.png">
+		<link rel="icon" type="image/png" sizes="16x16" href="assets/favicons/favicon-16.png">
+		<link rel="apple-touch-icon" sizes="152x152" href="assets/favicons/favicon-152.png">
+		<link rel="apple-touch-icon" sizes="144x144" href="assets/favicons/favicon-144.png">
+		<link rel="apple-touch-icon" sizes="120x120" href="assets/favicons/favicon-120.png">
+		<link rel="apple-touch-icon" sizes="114x114" href="assets/favicons/favicon-114.png">
+		<link rel="apple-touch-icon" sizes="76x76" href="assets/favicons/favicon-76.png">
+		<link rel="apple-touch-icon" sizes="72x72" href="assets/favicons/favicon-72.png">
+		<link rel="apple-touch-icon" href="assets/favicons/favicon-57.png">
+		<meta name="msapplication-TileColor" content="#FFFFFF">
+		<meta name="msapplication-TileImage" content="assets/favicons/favicon-144.png">
+		<meta name="msapplication-config" content="assets/favicons/browserconfig.xml">
+		<link href='http://fonts.googleapis.com/css?family=Audiowide' rel='stylesheet' type='text/css'>
 		<script src='game.js'></script>
 	</head>
-	<body onload="initMenu()" onresize="resize()" onorientationchange="resize()" style="margin: 0; padding: 0; background-color: black; overflow: hidden;">
+	<body onload="initGame()" onresize="resize()" onorientationchange="resize()" style="margin: 0; padding: 0; background-color: black; overflow: hidden;">
 		<canvas id="menu" style="position: absolute"></canvas>
 		<canvas id="game" style="position: absolute"></canvas>
+		<!--audio autoplay loop preload id="music" src="assets/sounds/background.wav"></audio-->
 	</body>
 </html>
