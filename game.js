@@ -270,6 +270,10 @@ function initGame() {
 		ctx.fillStyle = "red";
 		ctx.textAlign = "center";
 		ctx.fillText("Game Over!", winwidth / 2, winheight / 2);
+		ctx.font = "75pt Impact";
+		ctx.fillStyle = "white";
+		ctx.textAlign = "center";
+		ctx.fillText("Your score was " + score, winwidth / 2, winheight / 2 + 50);
 
 		ctx.fillStyle = "green";
 		ctx.fillRect(canvas.width / 2 - 100, canvas.height - 150, 200, 75);
