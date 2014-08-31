@@ -4,6 +4,9 @@ var gameOver = false;
 var winwidth = 0;
 var winheight = 0;
 var score = 0;
+var screenscale = 1;
+var screenarea = 2073600;
+var enemycap = 50;
 
 Ball = function(x, y, radius, color, vx, vy) {
 	this.x = x;
@@ -149,6 +152,9 @@ function initGame() {
 	var canvas = document.getElementById("game");
 	var ctx = canvas.getContext('2d');
 	currentcanvas = "game";
+	var clientarea = winwidth * winheight;
+	screenscale = clientarea / screenarea;
+	enemycap = enemycap * screenscale;
 	canvas.width = winwidth;
 	canvas.height = winheight;
 
@@ -218,7 +224,7 @@ function initGame() {
 		});
 		player.update(delta, canvas);
 
-		if (enemies.length <= 30) {
+		if (enemies.length <= enemycap) {
 			makeEnemy(Math.round(Math.random() * 4));
 		}
 	};
