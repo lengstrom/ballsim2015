@@ -8,7 +8,7 @@ var screenscale = 1;
 var screenarea = 2073600;
 var enemycap = 50;
 
-Ball = function(x, y, radius, color, vx, vy) {
+Ball = function(x, y, radius, color, vx, vy, target) {
 	this.x = x;
 	this.y = y;
 	this.radius = radius;
@@ -16,6 +16,7 @@ Ball = function(x, y, radius, color, vx, vy) {
 	this.vx = vx;
 	this.vy = vy;
 	this.alive = true;
+	this.target = target;
 };
 
 Ball.prototype.update = function(delta, canvas, array) {
@@ -26,6 +27,17 @@ Ball.prototype.update = function(delta, canvas, array) {
 		this.alive = false;
 		var index = array.indexOf(this);
 		array.splice(index, 1);
+	}
+
+	if (this.alive && this.radius < this.target.radius && collision(this,this.target)) {
+		this.alive = false;
+		this.target.radius += this.radius;
+		this.target.color = this.color;
+		score += Math.round(this.radius * 5);
+		var index = this.target.enemies.indexOf(this);
+		this.target.enemies.splice(index, 1);
+	} else if (this.alive && this.radius >= this.target.radius && collision(this,this.target)) {
+		gameOver = true;
 	}
 }
 
@@ -46,21 +58,6 @@ Player = function(x, y, enemies) {
 	this.speed = 250;
 	this.enemies = enemies;
 };
-
-Player.prototype.checkCollision = function (enemyArray) {
-	for (var i = 0; i < enemyArray.length; i++) {
-		if (enemyArray[i].alive && enemyArray[i].radius < this.radius && collision(this,enemyArray[i])) {
-			enemyArray[i].alive = false;
-			this.radius += enemyArray[i].radius;
-			this.color = enemyArray[i].color;
-			score += enemyArray[i].radius * 5;
-			var index = enemyArray.indexOf(enemyArray[i]);
-			enemyArray.splice(index, 1);
-		} else if (enemyArray[i].alive && enemyArray[i].radius >= this.radius && collision(this,enemyArray[i])) {
-			gameOver = true;
-		}
-	}
-}
 
 Player.prototype.update = function(delta, canvas) {
 	if (65 in keysDown) { //left
@@ -83,6 +80,19 @@ Player.prototype.update = function(delta, canvas) {
 			this.y += this.speed * delta;
 		}
 	}
+
+	for (var i = 0; i < this.enemies.length; i++) {
+		if (this.enemies[i].alive && this.enemies[i].radius < this.radius && collision(this,this.enemies[i])) {
+			this.enemies[i].alive = false;
+			this.radius += this.enemies[i].radius;
+			this.color = this.enemies[i].color;
+			score += Math.round(this.enemies[i].radius * 5);
+			var index = this.enemies.indexOf(this.enemies[i]);
+			this.enemies.splice(index, 1);
+		} else if (this.enemies[i].alive && this.enemies[i].radius >= this.radius && collision(this,this.enemies[i])) {
+			gameOver = true;
+		}
+	}
 }
 
 Player.prototype.draw = function(ctx) {
@@ -91,6 +101,12 @@ Player.prototype.draw = function(ctx) {
 	ctx.fillStyle = this.color;
 	ctx.fill();
 }
+
+function distance (x1,y1,x2,y2) {
+	dX2 = Math.pow((x2-x1),2);
+	dY2 = Math.pow((y2-y1),2);
+	return Math.sqrt(dX2 + dY2);
+} 
 
 function collision (a,b) {
 	space = a.radius + b.radius;
@@ -168,29 +184,29 @@ function initGame() {
 			var randY = Math.round(Math.random() * winheight);
 			var ranRadius = Math.random() * 2 * player.radius;
 			var color = colors[Math.round(Math.random() * colors.length)];
-			var speed = 5;
-			var enemy = new Ball(0, randY, ranRadius, color, speed, 0);
+			var speed = Math.round(Math.random() * 5) + 1;
+			var enemy = new Ball(0, randY, ranRadius, color, speed, 0, player);
 			enemies.push(enemy);
 		} else if (side === 1) {
 			var randX = Math.round(Math.random() * winwidth);
 			var ranRadius = Math.random() * 2 * player.radius;
 			var color = colors[Math.round(Math.random() * colors.length)];
-			var speed = 5;
-			var enemy = new Ball(randX, 0, ranRadius, color, 0, speed);
+			var speed = Math.round(Math.random() * 5) + 1;
+			var enemy = new Ball(randX, 0, ranRadius, color, 0, speed, player);
 			enemies.push(enemy);
 		} else if (side === 2) {
 			var randY = Math.round(Math.random() * winheight);
 			var ranRadius = Math.random() * 2 * player.radius;
 			var color = colors[Math.round(Math.random() * colors.length)];
-			var speed = 5;
-			var enemy = new Ball(winwidth, randY, ranRadius, color, speed * -1, 0);
+			var speed = Math.round(Math.random() * 5) + 1;
+			var enemy = new Ball(winwidth, randY, ranRadius, color, speed * -1, 0, player);
 			enemies.push(enemy);
 		} else if (side === 3) {
 			var randX = Math.round(Math.random() * winwidth);
 			var ranRadius = Math.random() * 2 * player.radius;
 			var color = colors[Math.round(Math.random() * colors.length)];
-			var speed = 5;
-			var enemy = new Ball(randX, 0, ranRadius, color, 0, speed * -1);
+			var speed = Math.round(Math.random() * 5) + 1;
+			var enemy = new Ball(randX, 0, ranRadius, color, 0, speed * -1, player);
 			enemies.push(enemy);
 		}
 	}
@@ -255,13 +271,11 @@ function initGame() {
 		ctx.textAlign = "center";
 		ctx.fillText("Game Over!", winwidth / 2, winheight / 2);
 
-		ctx.font = "30pt Arial";
-		ctx.fillStyle = "white";
-		ctx.textAlign = "center";
-		ctx.fillText("Level Select", winwidth / 2, 50);
 		ctx.fillStyle = "green";
 		ctx.fillRect(canvas.width / 2 - 100, canvas.height - 150, 200, 75);
 		ctx.fillStyle = "black";
+		ctx.font = "30pt Arial";
+		ctx.textAlign = "center";
 		ctx.fillText("Replay", winwidth / 2, winheight - 100);
 	}
 
