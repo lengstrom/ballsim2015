@@ -271,6 +271,8 @@ function initGame() {
 		if (enemies.length <= enemycap) {
 			makeEnemy(Math.round(Math.random() * 4));
 		}
+
+		score += Math.floor((Date.now() - start) / 1000);
 	};
 
 	var clearScreen = function() {
@@ -332,6 +334,7 @@ function initGame() {
 	}, false);
 
 	var then = Date.now();
+	var start = Date.now();
 	main();
 
 }
