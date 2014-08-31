@@ -31,7 +31,7 @@ Ball.prototype.update = function(delta, canvas, array) {
 
 	if (this.alive && this.radius < this.target.radius && collision(this,this.target)) {
 		this.alive = false;
-		this.target.radius += this.radius;
+		this.target.radius += this.radius / 2;
 		this.target.color = this.color;
 		score += Math.round(this.radius * 5);
 		var index = this.target.enemies.indexOf(this);
@@ -84,7 +84,7 @@ Player.prototype.update = function(delta, canvas) {
 	for (var i = 0; i < this.enemies.length; i++) {
 		if (this.enemies[i].alive && this.enemies[i].radius < this.radius && collision(this,this.enemies[i])) {
 			this.enemies[i].alive = false;
-			this.radius += this.enemies[i].radius;
+			this.radius += this.enemies[i].radius / 2;
 			this.color = this.enemies[i].color;
 			score += Math.round(this.enemies[i].radius * 5);
 			var index = this.enemies.indexOf(this.enemies[i]);
