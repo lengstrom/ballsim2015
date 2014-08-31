@@ -1,42 +1,11 @@
 <html>
 	<head>
 		<title>Ball Sim 2015</title>
-		<link rel="stylesheet" href="style.css">
+		<!--link href="style.css" rel="stylesheet"-->
+		<script src='game.js'></script>
 	</head>
-	<body>
-		<script src='js/phaser.js'></script>
-		<script src='js/jquery.js'></script>
-		<script>
-			var game = new Phaser.Game(600, 600, Phaser.AUTO, 'ballsim', { preload: preload, create: create, update: update, render: render });
-
-			function preload() {
-			}
-			
-			var background;
-			var cursors;
-			
-			function create() {
-				game.world.setBounds(0,0,3840,3840)
-				
-				game.physics.startSystem(Phaser.Physics.P2JS);
-				game.physics.p2.setImpactEvents(true);
-				game.stage.smoothed = false;
-				game.physics.p2.updateBoundsCollisionGroup();
-				game.scale.fullScreenScaleMode = Phaser.ScaleManager.EXACT_FIT;
-				//background = game.add.tileSprite(0,0,1300,731, 'stars');
-				//background.fixedToCamera = true;
-				cursors = game.input.keyboard.createCursorKeys();
-			}
-			
-			function update() {
-			}
-			
-			function render() {
-   			}
-
-		</script>
-		<script>
-		
-		</script>
+	<body onload="initMenu()" onresize="resize()" onorientationchange="resize()" style="margin: 0; padding: 0; background-color: black; overflow: hidden;">
+		<canvas id="menu" style="position: absolute"></canvas>
+		<canvas id="game" style="position: absolute"></canvas>
 	</body>
 </html>

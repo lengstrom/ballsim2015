@@ -1,17 +1,15 @@
-body {
-	font-family: helvetica;
-	overflow: scroll;
-	background-image: -webkit-linear-gradient(92deg,#f35626,#feab3a);
-	background-image: -moz-linear-gradient(92deg,#f35626,#feab3a);
-	background-image: -ie-linear-gradient(92deg,#f35626,#feab3a);
-	background-image: -o-linear-gradient(92deg,#f35626,#feab3a);
-	background-image: linear-gradient(92deg,#f35626,#feab3a);
+@-webkit-keyframes hue {
+  from {
+    -webkit-filter: hue-rotate(0deg);
+  }
+
+  to {
+    -webkit-filter: hue-rotate(-360deg);
+  }
 }
-canvas {
-	margin: 0 auto;
-	width: 600px;
-	height: 600px;
-	-moz-border-radius: 300px;
-	-webkit-border-radius: 300px;
-	border-radius: 300px;
+body {
+  background-image: -webkit-linear-gradient(92deg,#f35626,#feab3a);
+  -webkit-background-clip: content-box;
+  -webkit-animation: hue 10s infinite linear;
+  -webkit-text-fill-color: transparent;
 }
